@@ -6,31 +6,26 @@
 #define NUM_THREADS 1
 #endif
 
-#define X 3731
-#define Y 5716
+#define X 5716
+#define Y 3731
 
 int clamp(int v, int low, int high) {
     return v < low ? low : v > high ? high : v;
 }
 
-unsigned char data[X][Y];
-unsigned char ans[X][Y];
+unsigned char data[Y][X];
+unsigned char ans[Y][X];
 
 int dx[] = {0, 1, -1, 0, 0};
 int dy[] = {0, 0, 0, 1, -1};
 
 void filter() {
-#ifdef PARALLEL_X
 #pragma omp parallel for
-#endif
-    for (int i = 0; i < X; ++i) {
-#ifdef PARALLEL_Y
-#pragma omp parallel for
-#endif
-        for (int j = 0; j < Y; ++j) {
+    for (int i = 0; i < Y; ++i) {
+        for (int j = 0; j < X; ++j) {
             int s = 0;
             for (int k = 0; k < 5; ++k) {
-                s += data[(i + dx[k] + X) % X][(j + dy[k] + Y) % Y];
+                s += data[(i + dx[k] + Y) % Y][(j + dy[k] + X) % X];
             }
             ans[i][j] = clamp(s / 5, 0, 255);
         }
@@ -59,8 +54,8 @@ int main(int argc, char **argv) {
         }
     }
 
-    for (int i = 0; i < X; ++i) {
-        for (int j = 0; j < Y; ++j) {
+    for (int i = 0; i < Y; ++i) {
+        for (int j = 0; j < X; ++j) {
             ch = fgetc(fpin);
             data[i][j] = ch;
         }
@@ -74,8 +69,8 @@ int main(int argc, char **argv) {
 
     double en = omp_get_wtime();
 
-    for (int i = 0; i < X; ++i) {
-        for (int j = 0; j < Y; ++j) {
+    for (int i = 0; i < Y; ++i) {
+        for (int j = 0; j < X; ++j) {
             fputc(ans[i][j], fpout);
         }
     }

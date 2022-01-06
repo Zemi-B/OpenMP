@@ -6,23 +6,23 @@
 #define NUM_THREADS 1
 #endif
 
-#define X 3731
-#define Y 5716
+#define X 5716
+#define Y 3731
 #define W 50
 
 int clamp(int v, int low, int high) {
     return v < low ? low : v > high ? high : v;
 }
 
-unsigned char data[X][Y];
-unsigned int sum[X + 1][Y + 1];
-unsigned char ans[X - W][Y - W];
+unsigned char data[Y][X];
+unsigned int sum[Y + 1][X + 1];
+unsigned char ans[Y - W][X - W];
 
 void filter() {
-    for (int i = X; i >= 0; --i) {
 #pragma omp parallel for
-        for (int j = 0; j < Y; ++j) {
-            if (i == X)
+    for (int j = 0; j < X; ++j) {
+        for (int i = Y; i >= 0; --i) {
+            if (i == Y)
                 sum[i][j] = 0;
             else
                 sum[i][j] = sum[i + 1][j] + data[i][j];
@@ -30,23 +30,18 @@ void filter() {
     }
 
 #pragma omp parallel for
-    for (int i = 0; i < X; ++i) {
-        for (int j = Y; j >= 0; --j) {
-            if (j == Y)
+    for (int i = 0; i < Y; ++i) {
+        for (int j = X; j >= 0; --j) {
+            if (j == X)
                 sum[i][j] = 0;
             else
                 sum[i][j] += sum[i][j + 1];
         }
     }
 
-#ifdef PARALLEL_X
 #pragma omp parallel for
-#endif
-    for (int i = 0; i < X - W; ++i) {
-#ifdef PARALLEL_Y
-#pragma omp parallel for
-#endif
-        for (int j = 0; j < Y - W; ++j) {
+    for (int i = 0; i < Y - W; ++i) {
+        for (int j = 0; j < X - W; ++j) {
             int s = sum[i][j];
             s -= sum[i + W][j];
             s -= sum[i][j + W];
@@ -78,12 +73,12 @@ int main(int argc, char **argv) {
                 break;
         }
         if (i == 1) {
-            fprintf(fpout, "%d %d\n", Y - W, X - W);
+            fprintf(fpout, "%d %d\n", X - W, Y - W);
         }
     }
 
-    for (int i = 0; i < X; ++i) {
-        for (int j = 0; j < Y; ++j) {
+    for (int i = 0; i < Y; ++i) {
+        for (int j = 0; j < X; ++j) {
             ch = fgetc(fpin);
             data[i][j] = ch;
         }
@@ -97,8 +92,8 @@ int main(int argc, char **argv) {
 
     double en = omp_get_wtime();
 
-    for (int i = 0; i < X - W; ++i) {
-        for (int j = 0; j < Y - W; ++j) {
+    for (int i = 0; i < Y - W; ++i) {
+        for (int j = 0; j < X - W; ++j) {
             fputc(ans[i][j], fpout);
         }
     }
