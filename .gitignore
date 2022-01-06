@@ -1,4 +1,5 @@
 /build/*
 /data/*
 !/data/fhoto.pgm
+/img/*
 *.txt
