@@ -8,3 +8,5 @@ for program_number in "1" "2" "3"; do
     ../build/main$program_number.out ../data/fhoto.pgm ../data/fhoto$program_number.pgm >>out.txt
   done
 done
+
+python3 fig.py

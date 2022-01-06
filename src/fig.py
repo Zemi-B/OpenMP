@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import japanize_matplotlib
 
-labels = ['4近傍(x並列)', '4近傍(y並列)', '50*50(x並列)', '50*50(y並列)',
-          '50*50(累積和,x並列)', '50*50(累積和,y並列)']
+labels = ['4近傍', '50*50', '50*50(累積和)']
 x = [1, 2, 4, 8]
 
 f = open('out.txt', 'r')
@@ -21,17 +20,4 @@ plt.ylabel("実行時間[s]")
 plt.xscale("log", base=2)
 plt.legend()
 plt.grid()
-plt.savefig('../img/fig1.png')
-
-plt.figure()
-for i in range(len(labels)):
-    if 2 <= i <= 3:
-        continue
-    plt.plot(x, y[i], label=labels[i], marker='o')
-
-plt.xlabel("スレッド数")
-plt.ylabel("実行時間[s]")
-plt.xscale("log", base=2)
-plt.legend()
-plt.grid()
-plt.savefig('../img/fig2.png')
+plt.savefig('../img/fig.png')
