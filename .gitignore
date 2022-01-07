@@ -5,3 +5,4 @@
 *.txt
 *.out
 !src/out.txt
+!img/fhoto.jpg
