@@ -18,8 +18,9 @@ unsigned char data[Y][X];
 unsigned char ans[Y - W][X - W];
 
 void filter() {
+#pragma omp parallel
     for (int i = 0; i < Y - W; ++i) {
-#pragma omp parallel for
+#pragma omp for
         for (int j = 0; j < X - W; ++j) {
             int s = 0;
             for (int dx = 0; dx < W; ++dx) {
