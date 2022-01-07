@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import japanize_matplotlib
 
 labels = ['4近傍', '50*50', '50*50(累積和)']
-x = [1, 2, 4, 8]
+x = [1, 2, 4, 8, 16, 24]
 
 f = open('out.txt', 'r')
 v = list(map(float, f.read().split()))
@@ -21,3 +21,14 @@ plt.xscale("log", base=2)
 plt.legend()
 plt.grid()
 plt.savefig('../img/fig.png')
+
+plt.figure()
+for i in [0, 2]:
+    plt.plot(x, y[i], label=labels[i], marker='o')
+
+plt.xlabel("スレッド数")
+plt.ylabel("実行時間[s]")
+plt.xscale("log", base=2)
+plt.legend()
+plt.grid()
+plt.savefig('../img/fig1.png')
