@@ -6,3 +6,4 @@
 *.out
 !src/out.txt
 !img/fhoto.jpg
+!img/fhoto2.jpg
